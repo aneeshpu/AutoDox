@@ -1,5 +1,7 @@
 package autodox.views;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
@@ -13,6 +15,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import autodox.core.AutoDoxFile;
 import autodox.core.AutoDoxModel;
+import autodox.core.AutoDoxObserver;
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -29,7 +32,7 @@ import autodox.core.AutoDoxModel;
  * <p>
  */
 
-public class AutoDoxView extends ViewPart implements ISelectionListener {
+public class AutoDoxView extends ViewPart implements ISelectionListener, AutoDoxObserver {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -50,6 +53,7 @@ public class AutoDoxView extends ViewPart implements ISelectionListener {
 	 * The constructor.
 	 */
 	public AutoDoxView() {
+		autoDoxModel.addObserver(this);
 	}
 
 	/**
@@ -78,18 +82,14 @@ public class AutoDoxView extends ViewPart implements ISelectionListener {
 		if (!(firstElement instanceof IType))
 			return;
 		
-		IType selectedType = (IType)firstElement;
-		try {
-			IMethod[] methods = selectedType.getMethods();
-			labelView.setText("Success Dasa Success");
-			
-			for (IMethod iMethod : methods) {
-				labelView.setText(labelView.getText() + "\n" + iMethod.toString());
-			}
-		} catch (JavaModelException e) {
-			e.printStackTrace();
-		}
-		
+		labelView.setText("generating test documentation");
 		autoDoxModel.generateDox(new AutoDoxFile((IType)firstElement));
+	}
+
+	@Override
+	public void notify(List<String> testNames) {
+		for (String testName : testNames) {
+			labelView.setText(String.format("%s,%s",labelView.getText(),testName));
+		}
 	}
 }
