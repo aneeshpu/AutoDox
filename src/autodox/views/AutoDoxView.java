@@ -7,6 +7,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
@@ -40,6 +41,7 @@ public class AutoDoxView extends ViewPart implements ISelectionListener, AutoDox
 	public static final String ID = "autodox.views.AutoDoxView";
 	private AutoDoxModel autoDoxModel = new AutoDoxModel();
 	private Label labelView;
+	private org.eclipse.swt.widgets.List testNamesTable;
 
 	/*
 	 * The content provider class is responsible for providing objects to the
@@ -62,6 +64,8 @@ public class AutoDoxView extends ViewPart implements ISelectionListener, AutoDox
 	 */
 	public void createPartControl(Composite parent) {
 		labelView = new Label(parent, 0);
+		testNamesTable = new org.eclipse.swt.widgets.List(parent, SWT.MULTI);
+		testNamesTable.add("test names show up here");
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -88,8 +92,9 @@ public class AutoDoxView extends ViewPart implements ISelectionListener, AutoDox
 
 	@Override
 	public void notify(List<String> testNames) {
+		testNamesTable.removeAll();
 		for (String testName : testNames) {
-			labelView.setText(String.format("%s,%s",labelView.getText(),testName));
+			testNamesTable.add(testName);
 		}
 	}
 }
