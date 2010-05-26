@@ -40,7 +40,6 @@ public class AutoDoxView extends ViewPart implements ISelectionListener, AutoDox
 	 */
 	public static final String ID = "autodox.views.AutoDoxView";
 	private AutoDoxModel autoDoxModel = new AutoDoxModel();
-	private Label labelView;
 	private org.eclipse.swt.widgets.List testNamesTable;
 
 	/*
@@ -63,9 +62,7 @@ public class AutoDoxView extends ViewPart implements ISelectionListener, AutoDox
 	 * it.
 	 */
 	public void createPartControl(Composite parent) {
-		labelView = new Label(parent, 0);
 		testNamesTable = new org.eclipse.swt.widgets.List(parent, SWT.MULTI);
-		testNamesTable.add("test names show up here");
 		getSite().getPage().addSelectionListener(this);
 	}
 
@@ -77,7 +74,6 @@ public class AutoDoxView extends ViewPart implements ISelectionListener, AutoDox
 
 	@Override
 	public void selectionChanged(IWorkbenchPart workbenchPart, ISelection selection) {
-		labelView.setText("Inside autodox view");
 		if (!(selection instanceof IStructuredSelection))
 			return;
 
@@ -86,7 +82,6 @@ public class AutoDoxView extends ViewPart implements ISelectionListener, AutoDox
 		if (!(firstElement instanceof IType))
 			return;
 		
-		labelView.setText("generating test documentation");
 		autoDoxModel.generateDox(new AutoDoxFile((IType)firstElement));
 	}
 
